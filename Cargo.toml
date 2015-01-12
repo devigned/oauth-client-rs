@@ -11,7 +11,9 @@ description = "OAuth client for Rust"
 [dependencies]
 time = "0.1.0"
 url = "0.2.0"
-curl = "0.1.0"
 log = "0.1.0"
 rustc-serialize = "0.2.0"
 rust-crypto = "0.2.0"
+
+[dependencies.curl]
+git = "https://github.com/gifnksm/curl-rust"

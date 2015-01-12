@@ -2,11 +2,9 @@
         unused, unused_extern_crates, unused_import_braces,
         unused_qualifications, unused_results, unused_typecasts)]
 
-#![feature(phase)]
-
 extern crate crypto;
 extern crate curl;
-#[phase(plugin, link)] extern crate log;
+#[macro_use] extern crate log;
 extern crate "rustc-serialize" as rustc_serialize;
 extern crate time;
 extern crate url;
@@ -15,6 +13,7 @@ use std::borrow::IntoCow;
 use std::collections::HashMap;
 use std::rand::{self, Rng};
 use std::str;
+use std::fmt;
 use std::string::CowString;
 use rustc_serialize::base64::{self, ToBase64};
 use crypto::hmac::Hmac;
@@ -32,6 +31,10 @@ impl<'a> Token<'a> {
         where K : IntoCow<'a, String, str>, S: IntoCow<'a, String, str>
     {
         Token { key: key.into_cow(), secret: secret.into_cow() }
+    }
+
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+      write!(f, "key: {}, secret: {}", self.key, self.secret)
     }
 }
 
@@ -146,7 +149,7 @@ pub fn get(uri: &str, consumer: &Token, token: Option<&Token>, other_param: Opti
         .get(if body.len() > 0 { format!("{}?{}", uri, body) } else { format!("{}", uri) })
         .header("Authorization", header.as_slice())
         .exec().unwrap();
-    debug!("{}", resp);
+    //debug!("{}", resp);
     assert_eq!(200, resp.get_code());
     str::from_utf8(resp.get_body()).unwrap().to_string()
 }
@@ -158,7 +161,7 @@ pub fn post(uri: &str, consumer: &Token, token: Option<&Token>, other_param: Opt
         .header("Authorization", header.as_slice())
         .content_type("application/x-www-form-urlencoded")
         .exec().unwrap();
-    debug!("{}", resp);
+    //debug!("{}", resp);
     assert_eq!(200, resp.get_code());
     str::from_utf8(resp.get_body()).unwrap().to_string()
 }

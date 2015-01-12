@@ -2,8 +2,6 @@
         unused, unused_extern_crates, unused_import_braces,
         unused_qualifications, unused_results, unused_typecasts)]
 
-#![feature(phase)]
-
 extern crate curl;
 extern crate "oauth-client" as oauth;
 
@@ -83,16 +81,15 @@ fn echo(consumer: &Token, access: &Token) {
 
 fn main() {
     let consumer = Token::new("key", "secret");
-    println!("consumer: {}", consumer);
+    println!("consumer: {:?}", consumer);
 
     let request = get_request_token(&consumer);
-    println!("request: {}", request);
+    println!("request: {:?}", request);
 
     let access = get_access_token(&consumer, &request);
-    println!("access: {}", access);
+    println!("access: {:?}", access);
 
     echo(&consumer, &access);
 
     println!("OK");
 }
-
